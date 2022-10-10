@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weather App</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <main class="containers">
+      <article id="current-forecast">
+        <h1 class="name">City Name :</h1>
+        <p class="temp">Temp</p>
+        <p class="desc">Description</p>
+        <p class="min-max-val">High Low</p>
+      </article>
+
+      <article id="hourly-forecast">
+        <h1>Hourly Forecast</h1>
+        <section class="hourly-container">
+        </section>
+      </article>
+
+      <article id="five-day-forecast">
+        <h1>5 day Forecast</h1>
+        <article>
+          <h2>Today</h2>
+          <p>icon</p>
+          <p>low</p>
+          <p>high</p>
+        </article>
+      </article>
+
+      <article id="feels-like">
+        <h1>Feels Like</h1>
+        <h2 class="feels-like-temp"></h2>
+      </article>
+
+      <article id="humidity">
+        <h1>Humidity</h1>
+        <h2 class="hum"></h2>
+      </article>
+    </main>
+    <script src="main.js"></script>
+  </body>
+</html>
