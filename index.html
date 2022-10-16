@@ -8,6 +8,15 @@
   </head>
   <body>
     <main class="containers">
+
+      <input autocomplete="off" list="cities" placeholder="Search city" name="search" id="search">
+      <datalist id="cities">
+        <option value="Pune"></option>
+        <option value="Mumbai"></option>
+        <option value="Amt"></option>
+
+      </datalist>
+      
       <article id="current-forecast">
         <h1 class="name">City Name :</h1>
         <p class="temp">Temp</p>
@@ -23,12 +32,18 @@
 
       <article id="five-day-forecast">
         <h1>5 day Forecast</h1>
-        <article>
-          <h2>Today</h2>
-          <p>icon</p>
-          <p>low</p>
-          <p>high</p>
-        </article>
+        <section class="five-day-forecast-container">
+          <article class="day-wise-forecast">
+            <h3>Today</h3>
+            <img src="" alt="" />
+            <p class="min-temp">min </p>
+            <p class="max-temp">max</p>
+            <h3>Sun</h3>
+            <img class="icon" src="" alt="" />
+            <p class="min-temp">min</p>
+            <p class="max-temp">max</p>
+          </article>
+        </section>
       </article>
 
       <article id="feels-like">
