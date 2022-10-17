@@ -1,5 +1,8 @@
 const api_key = "dcb866d560e18526c652ac895e1bf6aa";
 
+let selectedCityText;
+let selectedCity;
+
 const getCities = async (SearchText) => {
   const response = await fetch(
     `http://api.openweathermap.org/geo/1.0/direct?q=${SearchText}&limit=5&appid=${api_key}`
@@ -23,11 +26,12 @@ const getHourlyForecast = async ({ name: city }) => {
   });
 };
 
-const getCurrentWeatherData = async () => {
-  const city = "pune";
-  const response = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${api_key}&units=metric`
-  );
+const getCurrentWeatherData = async ({ lat, lon, name }) => {
+  const url =
+    lat && lon
+      ? `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api_key}&units=metric`
+      : `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=${api_key}&units=metric`;
+  const response = await fetch(url);
   return response.json();
 };
 
@@ -135,6 +139,27 @@ const loadHumidity = ({ main: { humidity } }) => {
   container.querySelector(".hum").textContent = humidity + " %";
 };
 
+const loadForecastUsingGeoLocation = () => {
+  navigator.geolocation.getCurrentPosition(
+    ({ coords }) => {
+      const { latitude: lat, longitude: lon } = coords;
+      selectedCity = { lat, lon };
+      loadData();
+    },
+    (error) => console.log(error)
+  )
+}
+
+const loadData = async () => {
+  const currentWeather = await getCurrentWeatherData(selectedCity);
+  loadCurrentForecast(currentWeather);
+  const hourlyForecast = await getHourlyForecast(currentWeather);
+  loadHourlyForecast(currentWeather, hourlyForecast);
+  loadFeelsLike(currentWeather);
+  loadHumidity(currentWeather);
+  loadFiveDayForecast(hourlyForecast);
+};
+
 function debounce(func) {
   let timer;
   return (...args) => {
@@ -146,44 +171,47 @@ function debounce(func) {
   };
 }
 
-const onSearchChange = async(event) => {
+const onSearchChange = async (event) => {
   let { value } = event.target;
-  
-  const listofCities =  await getCities(value);
-  let options = "";
-  for(let{lat,lon,name,state,country } of listofCities){
-    options += `<option data-city-details =${JSON.stringify()} value="${name},${state},${country}"></option>`;
-  }
-  document.querySelector("#cities").innerHTML = options;
-};
 
-let selectedCityText;
-let selectedCity;
-const handleCitySelection =(event)=>{
-selectedCity =event.target.value;
-let options = document.querySelectorAll("#cities > option");
-    
-if(options?.length){
-        let selectedOption = Array.from(options).find(opt => opt.value === selectedCityText);
-        selectedCity = JSON.parse(selectedOption.getAttribute("data-city-details"));
-        console.log(selectedCity);
+  if (!value) {
+    selectedCity = null;
+    selectedCityText = "";
+  }
+  if (value && selectedCityText !== value) {
+    const listofCities = await getCities(value);
+
+    let options = "";
+    for (let { lat, lon, name, state, country } of listofCities) {
+      options += `<option data-city-details ='${JSON.stringify({
+        lat,
+        lon,
+        name,
+      })}' value="${name},${state},${country}"></option>`;
     }
-}
+    document.querySelector("#cities").innerHTML = options;
+  }
+};
+console.log(selectedCityText);
+
+const handleCitySelection = (event) => {
+  selectedCityText = event.target.value;
+  let options = document.querySelectorAll("#cities > option");
+  console.log(options);
+  if (options?.length) {
+    let selectedOption = Array.from(options).find(
+      (opt) => opt.value === selectedCityText
+    );
+    selectedCity = JSON.parse(selectedOption.getAttribute("data-city-details"));
+    loadData();
+  }
+};
 
 const debounceSearch = debounce((event) => onSearchChange(event));
 
-document.addEventListener("DOMContentLoaded", async() => {
+document.addEventListener("DOMContentLoaded", async () => {
+  loadForecastUsingGeoLocation();
   const searchInput = document.querySelector("#search");
   searchInput.addEventListener("input", onSearchChange);
-  searchInput.addEventListener("change",handleCitySelection);
-
-  const currentWeather = await getCurrentWeatherData();
-  loadCurrentForecast(currentWeather);
-
-  const hourlyForecast = await getHourlyForecast(currentWeather);
-
-  loadHourlyForecast(currentWeather, hourlyForecast);
-  loadFeelsLike(currentWeather);
-  loadHumidity(currentWeather);
-  loadFiveDayForecast(hourlyForecast);
+  searchInput.addEventListener("change", handleCitySelection);
 });

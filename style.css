@@ -21,8 +21,8 @@ p{
 body{
     margin : 0;
     font-family : sans-serif;
-    width: 400px;
-    margin: auto;
+    max-width: 800px;
+    margin:var(--spacing-regular) auto;
 }
 /*mobile first approch*/
 
@@ -78,9 +78,7 @@ body{
     overflow-x: auto;
     gap: 30px;
 }
-#hourly-forecast .hourly-container .time{
 
-}
 #hourly-forecast .hourly-container .icon{
 height: 100px;
 width: 100px;
@@ -141,4 +139,17 @@ justify-self: end;
 #humidity{
     grid-area:humidity;
     text-align: center;
+}
+
+
+@media(width >=650px){
+    
+    .containers{
+        grid-template-columns: repeat(4,1fr);
+        grid-template-areas: 
+        "search search search search"
+         "current current current  current" 
+         "hourly hourly fiveday fiveday" 
+         "feelslike humidity fiveday fiveday";
+    }
 }
