@@ -23,6 +23,7 @@ body{
     font-family : sans-serif;
     max-width: 800px;
     margin:var(--spacing-regular) auto;
+    background-image: url("bg.jpg");
 }
 /*mobile first approch*/
 
@@ -30,6 +31,7 @@ body{
     display: grid;
     grid-template-columns: repeat(2,1fr);
     grid-template-areas: "search search" "current current" "hourly hourly" "fiveday fiveday" "feelslike humidity";
+    background-color: rgba(0,0,0, 0.2); /* Black w/opacity/see-through */
 }
 .containers, .containers > article{
     border:1px solid;

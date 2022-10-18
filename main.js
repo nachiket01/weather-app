@@ -153,6 +153,7 @@ const loadForecastUsingGeoLocation = () => {
 const loadData = async () => {
   const currentWeather = await getCurrentWeatherData(selectedCity);
   loadCurrentForecast(currentWeather);
+  console.log(currentWeather);
   const hourlyForecast = await getHourlyForecast(currentWeather);
   loadHourlyForecast(currentWeather, hourlyForecast);
   loadFeelsLike(currentWeather);
@@ -192,7 +193,6 @@ const onSearchChange = async (event) => {
     document.querySelector("#cities").innerHTML = options;
   }
 };
-console.log(selectedCityText);
 
 const handleCitySelection = (event) => {
   selectedCityText = event.target.value;
